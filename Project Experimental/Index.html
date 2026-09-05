@@ -1,0 +1,188 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>WebGL 2023 - 01 Hello, Triangle!</title>
+
+    <style>
+      html, head, body {
+        margin: 0;
+        padding: 25px;
+        background-color: #2a2a2a;
+        font-family: 'Arial Black', Impact, sans-serif;
+      }
+
+      /* Base container holding canvas and UI */
+      .app-container {
+        position: relative;
+        display: inline-flex;
+        width: 400px;
+        height: 400px;
+        overflow: hidden;
+        transition: width 0.5s ease-in-out;
+      } 
+
+      .app-container.expanded {
+        width: 800px;
+      }
+
+      /* Canvas stays strictly at 400px wide so side panel opens beside it */
+      #demo-canvas {
+        width: 100%; /* Allows canvas to grow to 800px when container expands */
+        height: 400px;
+        flex-shrink: 0;
+        background-color: #da6052;
+        image-rendering: pixelated;
+        display: block;
+      }
+
+      /* Anchor overlay positioned specifically over the NO-GIRL text */
+      .text-mesh-anchor {
+        position: absolute;
+        top: 45px;         /* Lowered top position */
+        left: 80px;
+        width: 310px;      /* Increased width to push button further right */
+        height: 75px;      /* Increased height to lower the button */
+        pointer-events: none;
+        z-index: 10;
+      }
+
+      /* Yellow Dropdown Button anchored at the bottom-right of text area */
+      .dropdown-btn {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        pointer-events: auto;
+        background-color: #ffdc00;
+        color: #141414;
+        border: 1.5px solid #000;
+        font-weight: bold;
+        font-size: 10px;
+        padding: 1px 5px;
+        cursor: pointer;
+        border-radius: 3px;
+        box-shadow: 1.5px 1.5px 0px #000;
+        transition: transform 0.3s ease, background-color 0.2s;
+      }
+
+      .dropdown-btn:hover {
+        background-color: #ffe600;
+      }
+
+      .app-container.expanded .dropdown-btn {
+        transform: rotate(180deg);
+      }
+
+      /* Profile Panel: Slides out smoothly beside canvas */
+      #profile-panel {
+      position: absolute; /* Position over the right half of the canvas */
+      right: 0;
+      top: 0;
+      width: 400px;
+      height: 400px;
+      box-sizing: border-box;
+      padding: 130px 30px 30px 30px; /* Leave top space open for the NO-GIRL text */
+      background: transparent;
+      color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      z-index: 5;
+      overflow-y: auto;
+      opacity: 0;
+      pointer-events: none; /* Disable interaction when collapsed */
+      transition: opacity 0.4s ease-in-out;
+      }
+
+      /* Slide the button overlay right when expanded */
+      .app-container.expanded .text-mesh-anchor {
+        transform: translateX(380px);
+      }
+
+
+      /* Show content cleanly when expanded */
+      .app-container.expanded #profile-panel {
+        opacity: 1;
+        pointer-events: auto; /* Enable interaction when expanded */
+      }
+
+      .profile-section-header {
+        font-weight: bold;
+        font-size: 16px;
+        margin-bottom: 4px;
+        color: #ffdc00;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .profile-field-value {
+        font-size: 14px;
+        color: #d0d0d0;
+        margin-left: 10px;
+        line-height: 1.5;
+        font-family: Arial, sans-serif;
+      }
+
+      #error-box {
+        color: #fd8080;
+        font-weight: 500;
+        font-size: 18pt;
+        border: 1px solid white;
+        padding: 25px;
+        margin-top: 20px;
+      }
+
+      .error-box-title {
+        color: #eee;
+        border-bottom: 1px solid gray;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-container" id="app-container">
+      <canvas id="demo-canvas" width="400px" height="400px">
+        HTML5 canvas not supported in your browser!
+      </canvas>
+
+      <!-- Anchor for Yellow Button positioned at bottom-right of NO-GIRL area -->
+      <div class="text-mesh-anchor" id="text-mesh-anchor">
+        <button id="toggle-profile-btn" class="dropdown-btn" title="Toggle Profile">▼</button>
+      </div>
+
+      <!-- Extended Profile Information Panel -->
+      <div id="profile-panel">
+        <div>
+          <div class="profile-section-header">Real Name:</div>
+          <div class="profile-field-value">Martha Johansson</div>
+        </div>
+
+        <div>
+          <div class="profile-section-header">Mutation:</div>
+          <div class="profile-field-value">
+            Biological:<br>
+            &nbsp;&nbsp;Disembodied Brain / Telepathic Organism
+          </div>
+        </div>
+
+        <div>
+          <div class="profile-section-header">Powers/Abilities/Skills:</div>
+          <div class="profile-field-value">
+            • Telepathy & Mental Projection<br>
+            • Psionic Energy Bolts<br>
+            • Telekinesis<br>
+            • Biological Brain Fluid Life-Support
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div id="error-box">
+      <span class="error-box-title">Rotate the object for better viewing.</span>
+    </div>
+
+    <script src="hello-triangle.js"></script>
+  </body>
+</html>
